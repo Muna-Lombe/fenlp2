@@ -1,0 +1,32 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model PdfFile {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  filename   String?
+  pageCount  Int?
+  fileData   Json?
+  pdfPages   PdfPage[]
+  storageUrl String?
+}
+
+model PdfPage {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  pageId           Int?
+  processingMethod String?
+  includesText     Boolean?
+  includesTables   Boolean?
+  includesImages   Boolean?
+  pdfFile          PdfFile? @relation(fields: [pdfFileId], references: [id])
+  pdfFileId        String?
+}
